@@ -11,10 +11,10 @@ st.header('Using IBM CPLEX...')
 # st.sidebar.text("Number of buses = 15")
 # st.slider("Number of buses", 0, 15, 5)
 # st.text("")
-num_students = st.slider("Number of students", 0, 100, 10)
+num_students = st.slider("Number of students", 0, 15, 10)
 st.text("")
 st.text('Total buses = 15')
-capacity = st.slider("Capacity of bus", 0, 100, 15)
+capacity = st.slider("Capacity of bus", 0, 20, 15)
 # st.text('Capacity of every bus = 100')
 st.text("")
 
@@ -51,7 +51,7 @@ def main():
     Q = capacity # Bus capacity
     N = [i for i in range(1,n+1)] # list of students
     V = [0] + N # set of vertices including school
-    q = {i:r.randint(1,10) for i in N} # node number
+    q = {i:r.randint(1,10) for i in N} # node number / demand
 
     loc_x = r.rand(len(V))*200
     loc_y = r.rand(len(V))*100
@@ -69,7 +69,7 @@ def main():
     mdl.add_constraints(mdl.sum(x[i,j] for i in V if i!=j)==1 for j in N)
     mdl.add_indicator_constraints_(mdl.indicator_constraint(x[i,j],u[i]+q[j]==u[j])for i,j in A if i!=0 and j!=0)
     mdl.add_constraints(u[i]>=q[i] for i in N)
-    solution = mdl.solve(log_output=True, url=url, key=key)
+    solution = mdl.solve(url=url, key=key)
 
     if solution:
         st.text(solution)
